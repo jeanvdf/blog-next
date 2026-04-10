@@ -1,5 +1,5 @@
 export type PostModel = {
-  id: number;
+  id: string;
   title: string;
   slug: string;
   excerpt: string;
