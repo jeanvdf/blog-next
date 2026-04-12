@@ -10,5 +10,7 @@
   "editor.formatOnSave": true,
   "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
 
-  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]]
+  "tailwindCSS.experimental.classRegex": [["clsx\\(([^)]*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]],
+
+  "explorer.compactFolders": false
 }

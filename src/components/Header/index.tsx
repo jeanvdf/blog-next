@@ -10,7 +10,7 @@ export function Header() {
         lg:text-7xl/normal lg:py-16
         xl:text-8xl/normal xl:py-18"
       >
-        <Link href="#">Tech Lead</Link>
+        <Link href="/">Tech Lead</Link>
       </h1>
     </header>
   );

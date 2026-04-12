@@ -1,12 +1,12 @@
-import { jsonPostRepository } from '@/repositories';
-import { PostHeading } from '../PostHeading';
+import { findAllPostsPublished } from '@/lib/post/queries';
 import { PostImage } from '../PostImage';
+import { PostSummary } from '../PostSummary';
 
 export default async function PostsList() {
-  const posts = await jsonPostRepository.findAll();
+  const posts = await findAllPostsPublished();
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 lg:grid-cols-3">
-      {posts.map((post) => {
+      {posts.slice(1).map((post) => {
         const postLink = `/post/${post.slug}`;
         return (
           <div className="flex flex-col gap-4 group" key={post.id}>
@@ -21,20 +21,16 @@ export default async function PostsList() {
                 alt: post.title,
               }}
             />
-            <div className="flex flex-col gap-4 sm:justify-center">
-              <time className="text-slate-400 " dateTime={post.createdAt}>
-                {new Date(post.createdAt).toLocaleDateString('pt-BR')}
-              </time>
-              <PostHeading url={postLink} as="h2">
-                {post.title}
-              </PostHeading>
-
-              <p>{post.excerpt}</p>
-            </div>
+            <PostSummary
+              postHeading="h2"
+              createdAt={post.createdAt}
+              title={post.title}
+              excerpt={post.excerpt}
+              postLink={postLink}
+            />
           </div>
         );
       })}
-      ;
     </div>
   );
 }

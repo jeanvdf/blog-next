@@ -20,6 +20,7 @@ export function PostImage({ imageProps, linkProps }: PostImageProps) {
         }
         {...imageProps}
         alt={imageProps.alt}
+        priority
       ></Image>
     </Link>
   );
