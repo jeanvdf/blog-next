@@ -28,6 +28,7 @@ export class JsonPostRepository implements PostRepository {
 
     return posts.filter((post) => post.published);
   }
+
   async findById(id: string): Promise<PostModel> {
     await this.simulateDelay();
     const posts = await this.readFromDisk();
@@ -35,6 +36,18 @@ export class JsonPostRepository implements PostRepository {
 
     if (!post) {
       throw new Error(`Post não encontrado com id: ${id}`);
+    }
+
+    return post;
+  }
+
+  async findBySlug(slug: string): Promise<PostModel> {
+    await this.simulateDelay();
+    const posts = await this.readFromDisk();
+    const post = posts.find((post) => post.slug === slug);
+
+    if (!post) {
+      throw new Error(`Post não encontrado com slug: ${slug}`);
     }
 
     return post;

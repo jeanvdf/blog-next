@@ -19,8 +19,8 @@ export async function PostFeatured() {
         }}
         imageProps={{
           src: '/images/tech01.png',
-          width: 1200,
-          height: 720,
+          width: 1536,
+          height: 1024,
           alt: 'Título',
         }}
       />

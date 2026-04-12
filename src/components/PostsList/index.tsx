@@ -16,8 +16,8 @@ export default async function PostsList() {
               }}
               imageProps={{
                 src: post.coverImageUrl,
-                width: 1200,
-                height: 720,
+                width: 1536,
+                height: 1024,
                 alt: post.title,
               }}
             />
