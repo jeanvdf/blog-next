@@ -22,7 +22,14 @@ export class JsonPostRepository implements PostRepository {
     return posts;
   }
 
-  async findPublished(): Promise<PostModel[]> {
+  async findAll(): Promise<PostModel[]> {
+    await this.simulateDelay();
+    const posts = await this.readFromDisk();
+
+    return posts;
+  }
+
+  async findAllPublished(): Promise<PostModel[]> {
     await this.simulateDelay();
     const posts = await this.readFromDisk();
 
@@ -41,7 +48,7 @@ export class JsonPostRepository implements PostRepository {
     return post;
   }
 
-  async findBySlug(slug: string): Promise<PostModel> {
+  async findBySlugPublished(slug: string): Promise<PostModel> {
     await this.simulateDelay();
     const posts = await this.readFromDisk();
     const post = posts.find((post) => post.slug === slug);

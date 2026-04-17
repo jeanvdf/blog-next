@@ -1,11 +1,13 @@
-import { jsonPostRepository } from '@/repositories';
+import { drizzlePostRepository } from '@/repositories';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
-export const findAllPostsPublished = cache(async () => await jsonPostRepository.findPublished());
+export const findAllPostsPublished = cache(
+  async () => await drizzlePostRepository.findAllPublished(),
+);
 
 export const findPostBySlugCached = cache(async (slug: string) => {
-  const post = await jsonPostRepository.findBySlug(slug).catch(() => undefined);
+  const post = await drizzlePostRepository.findBySlugPublished(slug).catch(() => undefined);
   if (!post) {
     notFound();
   }
@@ -14,5 +16,5 @@ export const findPostBySlugCached = cache(async (slug: string) => {
 });
 
 export const findPostByIdCached = cache(
-  async (id: string) => await jsonPostRepository.findById(id),
+  async (id: string) => await drizzlePostRepository.findById(id),
 );
