@@ -3,11 +3,10 @@ import { resolve } from 'path';
 
 import { PostModel } from '@/models/PostModel';
 import { PostRepository } from './post-repository';
+import { WAIT_TIME_MS } from '@/utils/constantes';
 
 const ROOT_DIR = process.cwd();
 const JSON_POSTS_FILE_PATH = resolve(ROOT_DIR, 'src', 'db', 'seed', 'posts.json');
-
-const WAIT_TIME_MS = 0;
 
 export class JsonPostRepository implements PostRepository {
   private async simulateDelay() {
