@@ -1,20 +1,39 @@
 import { drizzlePostRepository } from '@/repositories';
+import { unstable_cache } from 'next/cache';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 
-export const findAllPostsPublished = cache(
-  async () => await drizzlePostRepository.findAllPublished(),
+export const findAllPostsPublished = unstable_cache(
+  cache(async () => {
+    return await drizzlePostRepository.findAllPublished();
+  }),
+  ['posts'],
+  {
+    tags: ['posts'],
+  },
 );
 
-export const findPostBySlugCached = cache(async (slug: string) => {
-  const post = await drizzlePostRepository.findBySlugPublished(slug).catch(() => undefined);
-  if (!post) {
-    notFound();
-  }
+export const findPostBySlugCached = (slug: string) =>
+  unstable_cache(
+    cache(async () => {
+      const post = await drizzlePostRepository.findBySlugPublished(slug).catch(() => undefined);
+      if (!post) {
+        notFound();
+      }
 
-  return post;
-});
+      return post;
+    }),
+    [`post-${slug}`],
+    {
+      tags: [`post-${slug}`],
+    },
+  );
 
-export const findPostByIdCached = cache(
-  async (id: string) => await drizzlePostRepository.findById(id),
-);
+export const findPostByIdCached = (id: string) =>
+  unstable_cache(
+    cache(async () => await drizzlePostRepository.findById(id)),
+    [`post-${id}`],
+    {
+      tags: [`post-${id}`],
+    },
+  );

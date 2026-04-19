@@ -1,3 +1,5 @@
+'use client';
+
 import { formatDateTime, formatRelativeDateTime } from '@/utils/date-util';
 
 type PostDateProps = {
