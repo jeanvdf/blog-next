@@ -27,7 +27,7 @@ export const findPostBySlugCached = (slug: string) =>
     {
       tags: [`post-${slug}`],
     },
-  );
+  )();
 
 export const findPostByIdCached = (id: string) =>
   unstable_cache(

@@ -1,6 +1,6 @@
 import SinglePost from '@/components/SinglePost';
 import { SpinLoader } from '@/components/SpinLoader';
-import { findPostBySlugCached } from '@/lib/post/queries';
+import { findPostBySlugCached } from '@/lib/post/public-queries';
 import { Suspense } from 'react';
 
 type PostPageProps = {

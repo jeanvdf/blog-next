@@ -1,4 +1,4 @@
-import { findAllPostsPublished } from '@/lib/post/queries';
+import { findAllPostsPublished } from '@/lib/post/public-queries';
 import { PostImage } from '../PostImage';
 import { PostSummary } from '../PostSummary';
 
