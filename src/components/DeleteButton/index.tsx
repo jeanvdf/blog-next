@@ -19,7 +19,7 @@ export function DeleteButton({ title, id }: DeleteButtonProps) {
   function handleConfirm() {
     startTransition(async () => {
       const result = await deletePostAction(id);
-      console.log('result', result);
+      alert(`O result foi ${result.error}`);
       setShowDialog(false);
     });
   }

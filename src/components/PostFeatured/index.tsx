@@ -1,9 +1,16 @@
 import { findAllPostsPublished } from '@/lib/post/public-queries';
 import { PostImage } from '../PostImage';
 import { PostSummary } from '../PostSummary';
+import ErrorMessage from '../ErrorMessage';
 
 export async function PostFeatured() {
   const posts = await findAllPostsPublished();
+
+  if (posts.length <= 0) {
+    return (
+      <ErrorMessage contentTitle="Ops :) " contentDescription="Ainda não criamos nenhum post" />
+    );
+  }
   const [post] = posts;
   const postLink = `/post/${post.slug}`;
 
