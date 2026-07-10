@@ -1,7 +1,6 @@
 import { findAllPostsAdmin } from '@/lib/post/admin-queries';
 import Link from 'next/link';
 import { DeleteButton } from '../DeleteButton';
-import { ModalConfirm } from '../Modal/ModalConfirm';
 
 export default async function PostsListAdmin() {
   const posts = await findAllPostsAdmin();
@@ -22,8 +21,6 @@ export default async function PostsListAdmin() {
           </div>
         );
       })}
-
-      <ModalConfirm />
     </div>
   );
 }
