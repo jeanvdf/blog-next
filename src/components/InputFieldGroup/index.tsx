@@ -1,18 +1,15 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
+import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Ellipsis } from 'lucide-react';
-import { useRef, useState } from 'react';
-import { ButtonGroup } from '../ui/button-group';
+import { useState } from 'react';
+import { MarkdownEditor } from '../MarkdownEditor';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import { MarkdownEditor } from '../MarkdownEditor';
+import { ImageUploadField } from '../ImageUploadField';
 
 export function ManagePostForm() {
-  const inputRefImg = useRef<HTMLInputElement>(null);
-
   const [contentValue, setContentValue] = useState('Este é **um** exemplo');
 
   return (
@@ -26,23 +23,6 @@ export function ManagePostForm() {
           <FieldLabel htmlFor="excerpt">Conteúdo</FieldLabel>
           <Input id="form-email" type="email" placeholder="john@exemplo.com" />
         </Field>
-        <div className="grid grid-cols-2 gap-4">
-          <Field>
-            <FieldLabel htmlFor="form-image">Imagem</FieldLabel>
-            <ButtonGroup>
-              <Input id="form-image" type="file" className="cursor-pointer" ref={inputRefImg} />
-              <Button
-                variant="outline"
-                className="bg-slate-100"
-                size="icon"
-                onClick={() => inputRefImg.current?.click()}
-              >
-                <Ellipsis />
-              </Button>
-            </ButtonGroup>
-            <FieldDescription>Escolha sua imagem.</FieldDescription>
-          </Field>
-        </div>
         <Field>
           <FieldLabel htmlFor="form-content">Conteúdo</FieldLabel>
           <MarkdownEditor
@@ -52,6 +32,7 @@ export function ManagePostForm() {
             setValue={setContentValue}
           />
         </Field>
+        <ImageUploadField />
         <Field>
           <FieldLabel htmlFor="author">Autor</FieldLabel>
           <Input id="author" type="text" placeholder="João Augusto" />
