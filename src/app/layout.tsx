@@ -3,6 +3,10 @@ import { Header } from '@/components/Header';
 import './globals.css';
 import { Footer } from '@/components/Footer';
 import { ToastifyContainer } from '@/components/ToastifyContainer';
+import { Geist } from 'next/font/google';
+import { cn } from '@/lib/utils';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata = {
   title: {
@@ -17,7 +21,7 @@ type RootLayoutProps = {
 
 export default function RootLayout({ children }: Readonly<RootLayoutProps>) {
   return (
-    <html lang="pt-BR">
+    <html lang="pt-BR" className={cn('font-sans', geist.variable)}>
       <body>
         <Container>
           <Header />

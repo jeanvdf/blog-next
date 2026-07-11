@@ -5,6 +5,7 @@ import { ArrowUpSquareIcon, CircleXIcon, HomeIcon, MenuIcon, PlusIcon } from 'lu
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { Button, buttonVariants } from '../ui/button';
 
 export function AdminMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,36 +23,33 @@ export function AdminMenu() {
     !isOpen && 'h-10',
   );
 
-  const linkClassName = clsx(
-    'transition hover:bg-slate-300 px-4 border-b rounded-lg mb-4',
-    'flex items-center gap-2 cursor-pointer',
-  );
-
-  const buttonsOpenCloseClassName = clsx(linkClassName, 'bg-blue-300');
+  const buttonsOpenCloseClassName = clsx('bg-blue-300', 'sm:hidden');
 
   return (
     <nav className={navClassName}>
       {!isOpen && (
-        <button className={buttonsOpenCloseClassName} onClick={() => setIsOpen((s) => !s)}>
+        <Button className={buttonsOpenCloseClassName} onClick={() => setIsOpen((s) => !s)}>
           <MenuIcon />
           Menu
-        </button>
+        </Button>
       )}
       {isOpen && (
-        <button className={buttonsOpenCloseClassName} onClick={() => setIsOpen((s) => !s)}>
+        <Button className={buttonsOpenCloseClassName} onClick={() => setIsOpen((s) => !s)}>
           <CircleXIcon />
           Fechar
-        </button>
+        </Button>
       )}
-      <a href="/" target="_blank" className={linkClassName}>
+      <a href="/" target="_blank" className={`${buttonVariants({ variant: 'default' })} `}>
         <HomeIcon size={16} />
         Home
       </a>
-      <Link href="/admin/post" className={linkClassName}>
+
+      <Link href="/admin/post" className={buttonVariants({ variant: 'outline' })}>
         <ArrowUpSquareIcon size={16} />
         Posts
       </Link>
-      <Link href="/admin/post/new" className={linkClassName}>
+
+      <Link href="/admin/post/new" className={buttonVariants({ variant: 'secondary' })}>
         <PlusIcon size={16} />
         Criar Post
       </Link>
