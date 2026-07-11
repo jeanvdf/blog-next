@@ -19,15 +19,13 @@ import { useState, useTransition } from 'react';
 export type ModalConfirmProps = {
   title: string;
   content: string;
-  isVisible?: boolean;
   onConfirm: () => void;
+  children: React.ReactElement;
 };
 
-export function ModalConfirm({ title, content, isVisible = true, onConfirm }: ModalConfirmProps) {
+export function ModalConfirm({ title, content, onConfirm, children }: ModalConfirmProps) {
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-
-  if (!isVisible) return;
 
   async function handleConfirm() {
     startTransition(async () => {
@@ -40,17 +38,7 @@ export function ModalConfirm({ title, content, isVisible = true, onConfirm }: Mo
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
-      <AlertDialogTrigger
-        render={
-          <Button
-            variant="destructive"
-            className="text-red-500 cursor-pointer transition hover:scale-120 disabled:text-slate-400 disabled:cursor-not-allowed"
-            size="icon"
-          >
-            <Trash2Icon />
-          </Button>
-        }
-      />
+      <AlertDialogTrigger render={children} />
       <AlertDialogContent size="sm">
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
