@@ -1,29 +1,32 @@
 'use client';
 
+import { createPostAction } from '@/actions/post/create-post-action';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { PublicPost } from '@/models/PostModel';
-import { useActionState, useEffect, useState } from 'react';
+import { makePartialPublicPost, PublicPost } from '@/models/PostModel';
+import { useActionState, useState } from 'react';
 import { ImageUploadField } from '../ImageUploadField';
 import { MarkdownEditor } from '../MarkdownEditor';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import { createPostAction } from '@/actions/post/create-post-action';
 
 type ManagePostFormProps = {
-  post?: PublicPost;
+  publicPost?: PublicPost;
 };
 
-export function ManagePostForm({ post: publicPost }: ManagePostFormProps) {
-  const [contentValue, setContentValue] = useState(publicPost?.content || '');
-  const initialState = { numero: 0 };
+export function ManagePostForm({ publicPost }: ManagePostFormProps) {
+  const initialState = { formState: makePartialPublicPost(publicPost), errors: [] };
   const [state, action, isPending] = useActionState(createPostAction, initialState);
+  const [prevState, setPrevState] = useState(state);
+  const [form, setForm] = useState(state.formState);
+  const [contentValue, setContentValue] = useState(state.formState?.content || '');
 
-  useEffect(() => {
-    console.log(state.numero);
-  }, [state.numero]);
-
+  if (state !== prevState) {
+    setPrevState(state);
+    setForm(state.formState);
+    setContentValue(state.formState.content);
+  }
   return (
     <form action={action} className="w-full mb-16">
       <FieldGroup>
@@ -32,8 +35,22 @@ export function ManagePostForm({ post: publicPost }: ManagePostFormProps) {
           <FieldLabel htmlFor="slug">Slug</FieldLabel>
         </Field>
         <Field orientation="horizontal">
-          <Input id="id" name="id" type="text" readOnly defaultValue={publicPost?.id || ''} />
-          <Input id="slug" name="slug" type="text" readOnly defaultValue={publicPost?.slug || ''} />
+          <Input
+            id="id"
+            name="id"
+            type="text"
+            readOnly
+            value={form.id}
+            onChange={(e) => setForm((p) => ({ ...p, id: e.target.value }))}
+          />
+          <Input
+            id="slug"
+            name="slug"
+            type="text"
+            readOnly
+            value={form.slug}
+            onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))}
+          />
         </Field>
         <FieldLabel htmlFor="author">Autor</FieldLabel>
         <Field orientation="horizontal">
@@ -41,12 +58,14 @@ export function ManagePostForm({ post: publicPost }: ManagePostFormProps) {
             id="author"
             type="text"
             placeholder="João Augusto"
-            defaultValue={publicPost?.author || ''}
+            value={form.author}
+            onChange={(e) => setForm((p) => ({ ...p, author: e.target.value }))}
           />
           <Checkbox
             id="published"
             name="published"
-            defaultChecked={publicPost?.published || false}
+            checked={form.published}
+            onCheckedChange={(checked) => setForm((p) => ({ ...p, published: checked }))}
           />
           <Label htmlFor="published">Publicado</Label>
         </Field>
@@ -56,18 +75,20 @@ export function ManagePostForm({ post: publicPost }: ManagePostFormProps) {
             id="title"
             name="title"
             type="text"
-            defaultValue={publicPost?.title || ''}
+            value={form.title}
+            onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
             placeholder="Digite o título do post"
           />
         </Field>
         <Field>
           <FieldLabel htmlFor="excerpt">Excerto</FieldLabel>
           <Input
-            defaultValue={publicPost?.excerpt || ''}
             id="excerpt"
             name="excerpt"
             type="text"
             placeholder="Digite um fragmento do post"
+            value={form.excerpt}
+            onChange={(e) => setForm((p) => ({ ...p, excerpt: e.target.value }))}
           />
         </Field>
         <Field>
@@ -88,7 +109,8 @@ export function ManagePostForm({ post: publicPost }: ManagePostFormProps) {
             name="coverImageUrl"
             type="text"
             placeholder="Digite um fragmento do post"
-            defaultValue={publicPost?.coverImageUrl || ''}
+            value={form.coverImageUrl}
+            onChange={(e) => setForm((p) => ({ ...p, coverImageUrl: e.target.value }))}
           />
         </Field>
         <Field orientation="horizontal">
