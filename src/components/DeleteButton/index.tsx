@@ -1,6 +1,6 @@
 'use client';
 
-import { deletePostAction } from '@/actions/delete-post-action';
+import { deletePostAction } from '@/actions/post/delete-post-action';
 import { toast } from 'react-toastify';
 import { ModalConfirm } from '../Modal/ModalConfirm';
 import { Button } from '../ui/button';

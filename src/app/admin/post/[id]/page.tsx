@@ -1,10 +1,25 @@
+import { ManagePostForm } from '@/components/ManagePostForm';
+import { findPostByIdAdmin } from '@/lib/post/admin-queries';
+import { Metadata } from 'next';
+
 type AdminPostIdPageProps = {
   params: Promise<{
     id: string;
   }>;
 };
 
+export const metadata: Metadata = {
+  title: 'Editar post',
+};
+
 export default async function AdminPostIdPage({ params }: AdminPostIdPageProps) {
   const { id } = await params;
-  return <div className="py-16 text-5xl">AdminPostIdPage {id}</div>;
+
+  const post = await findPostByIdAdmin(id).catch();
+  return (
+    <div className="flex flex-col gap-6">
+      <h1 className="text-xl font-extrabold">Editar Post</h1>
+      <ManagePostForm post={post} />
+    </div>
+  );
 }
