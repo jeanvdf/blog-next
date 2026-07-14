@@ -1,24 +1,58 @@
 'use client';
 
 import { createPostAction } from '@/actions/post/create-post-action';
+import { PostActionState } from '@/actions/post/types';
+import { updatePostAction } from '@/actions/post/update-post-action';
 import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { makePartialPublicPost, PublicPost } from '@/models/PostModel';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useState } from 'react';
+import { toast } from 'react-toastify';
 import { ImageUploadField } from '../ImageUploadField';
 import { MarkdownEditor } from '../MarkdownEditor';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
-import { toast } from 'react-toastify';
 
-type ManagePostFormProps = {
-  publicPost?: PublicPost;
+type ManagePostFormCreateProps = {
+  mode: 'create';
 };
+type ManagePostFormUpdateProps = {
+  mode: 'update';
+  publicPost: PublicPost;
+};
+type ManagePostFormProps = ManagePostFormCreateProps | ManagePostFormUpdateProps;
 
-export function ManagePostForm({ publicPost }: ManagePostFormProps) {
+export function ManagePostForm(props: ManagePostFormProps) {
+  const { mode } = props;
+  let publicPost;
+  if (mode === 'update') {
+    publicPost = props.publicPost;
+  }
+
+  const modeActionMap = {
+    update: updatePostAction,
+    create: createPostAction,
+  };
+
   const initialState = { formState: makePartialPublicPost(publicPost), errors: [] };
-  const [state, action, isPending] = useActionState(createPostAction, initialState);
+  const [state, action, isPending] = useActionState(
+    async (prevState: PostActionState, formData: FormData) => {
+      const result = await modeActionMap[mode](prevState, formData);
+
+      toast.dismiss();
+      if (result.success) {
+        toast.success('Post salvo com sucesso!');
+      } else if (result.errors.length > 0) {
+        result.errors.forEach((e) => toast.error(e));
+      } else {
+        toast.success('Post salvo com sucesso!');
+      }
+
+      return result;
+    },
+    initialState,
+  );
   const [prevState, setPrevState] = useState(state);
   const [form, setForm] = useState(state.formState);
   const [contentValue, setContentValue] = useState(state.formState?.content || '');
@@ -29,13 +63,6 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
     setContentValue(state.formState.content);
     console.log(state);
   }
-
-  useEffect(() => {
-    if (state.errors.length > 0) {
-      toast.dismiss();
-      state.errors.forEach((e) => toast.error(e));
-    }
-  }, [state.errors]);
 
   return (
     <form action={action} className="w-full mb-16">
@@ -52,6 +79,7 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             readOnly
             value={form.id}
             onChange={(e) => setForm((p) => ({ ...p, id: e.target.value }))}
+            disabled={isPending}
           />
           <Input
             id="slug"
@@ -60,6 +88,7 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             readOnly
             value={form.slug}
             onChange={(e) => setForm((p) => ({ ...p, slug: e.target.value }))}
+            disabled={isPending}
           />
         </Field>
         <FieldLabel htmlFor="author">Autor</FieldLabel>
@@ -71,12 +100,14 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             placeholder="João Augusto"
             value={form.author}
             onChange={(e) => setForm((p) => ({ ...p, author: e.target.value }))}
+            disabled={isPending}
           />
           <Checkbox
             id="published"
             name="published"
             checked={form.published}
             onCheckedChange={(checked) => setForm((p) => ({ ...p, published: checked }))}
+            disabled={isPending}
           />
           <Label htmlFor="published">Publicado</Label>
         </Field>
@@ -89,6 +120,7 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             value={form.title}
             onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
             placeholder="Digite o título do post"
+            disabled={isPending}
           />
         </Field>
         <Field>
@@ -100,19 +132,20 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             placeholder="Digite um fragmento do post"
             value={form.excerpt}
             onChange={(e) => setForm((p) => ({ ...p, excerpt: e.target.value }))}
+            disabled={isPending}
           />
         </Field>
         <Field>
           <FieldLabel htmlFor="content">Conteúdo</FieldLabel>
           <MarkdownEditor
             textAreaName="content"
-            disabled={false}
+            disabled={isPending}
             value={contentValue}
             setValue={setContentValue}
           />
         </Field>
         <Field>
-          <ImageUploadField />
+          <ImageUploadField disabled={isPending} />
         </Field>
         <Field>
           <FieldLabel htmlFor="coverImageUrl">URL da imagem de capa</FieldLabel>
@@ -122,13 +155,16 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
             placeholder="Digite um fragmento do post"
             value={form.coverImageUrl}
             onChange={(e) => setForm((p) => ({ ...p, coverImageUrl: e.target.value }))}
+            disabled={isPending}
           />
         </Field>
         <Field orientation="horizontal">
-          <Button type="button" variant="outline">
+          <Button type="button" variant="outline" disabled={isPending}>
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" disabled={isPending}>
+            Submit
+          </Button>
         </Field>
       </FieldGroup>
     </form>

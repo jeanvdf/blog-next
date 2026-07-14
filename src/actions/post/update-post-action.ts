@@ -1,15 +1,13 @@
 'use server';
 
-import { PostCreateSchema } from '@/lib/post/validation';
-import { makePartialPublicPost, PostModel } from '@/models/PostModel';
+import { PostUpdateSchema } from '@/lib/post/validation';
+import { makePartialPublicPost, makePublicPost } from '@/models/PostModel';
 import { drizzlePostRepository } from '@/repositories';
 import { getZodErrorMessages } from '@/utils/get-zod-error-message';
-import { makeSlugFromText } from '@/utils/make-slug-from-text';
-import { redirect } from 'next/navigation';
-import { v4 as uuidV4 } from 'uuid';
+import { updateTag } from 'next/cache';
 import { PostActionState } from './types';
 
-export async function createPostAction(
+export async function updatePostAction(
   prevState: PostActionState,
   formData: FormData,
 ): Promise<PostActionState> {
@@ -22,8 +20,19 @@ export async function createPostAction(
     };
   }
 
+  const id = formData.get('id')?.toString();
+
+  if (!id || typeof id !== 'string') {
+    return {
+      formState: {
+        ...prevState.formState,
+      },
+      errors: ['ID inválido.'],
+    };
+  }
+
   const formDataToObj = Object.fromEntries(formData.entries());
-  const zodParsedObj = PostCreateSchema.safeParse(formDataToObj);
+  const zodParsedObj = PostUpdateSchema.safeParse(formDataToObj);
 
   if (!zodParsedObj.success) {
     const errors = getZodErrorMessages(zodParsedObj.error);
@@ -35,28 +44,31 @@ export async function createPostAction(
   }
 
   const finalObj = zodParsedObj.data;
-  const newPost: PostModel = {
+  const newPost = {
     ...finalObj,
-    id: uuidV4(),
-    slug: makeSlugFromText(finalObj.title),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
   };
 
+  let post;
   try {
-    await drizzlePostRepository.create(newPost);
+    post = await drizzlePostRepository.update(id, newPost);
   } catch (e: unknown) {
     if (e instanceof Error) {
       return {
-        formState: newPost,
+        formState: makePartialPublicPost(formDataToObj),
         errors: [e.message],
       };
     }
     return {
-      formState: newPost,
+      formState: makePartialPublicPost(formDataToObj),
       errors: ['Erro desconhecido.'],
     };
   }
 
-  redirect(`/admin/post/${newPost.id}`);
+  updateTag(`post-${post.slug}`);
+  updateTag('posts');
+  return {
+    formState: makePublicPost(post),
+    errors: [],
+    success: true,
+  };
 }

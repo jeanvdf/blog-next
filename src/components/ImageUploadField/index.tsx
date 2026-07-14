@@ -8,7 +8,11 @@ import { FILE_UPLOADER_MAX_SIZE } from '@/utils/constantes';
 import { toast } from 'react-toastify';
 import { uploadImageAction } from '@/actions/upload/upload-image-action';
 
-export function ImageUploadField() {
+type ImageUploadFieldProps = {
+  disabled?: boolean;
+};
+
+export function ImageUploadField({ disabled = false }: ImageUploadFieldProps) {
   const inputRefImg = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState('');
@@ -62,12 +66,13 @@ export function ImageUploadField() {
         type="file"
         className="cursor-pointer hidden"
         ref={inputRefImg}
+        disabled={disabled}
       />
       <ButtonGroup>
         <Button
           variant="outline"
           onClick={() => inputRefImg.current?.click()}
-          disabled={isUploading}
+          disabled={isUploading || disabled}
         >
           Selecione uma imagem
         </Button>
@@ -76,7 +81,7 @@ export function ImageUploadField() {
           className="bg-slate-100"
           size="icon"
           onClick={() => inputRefImg.current?.click()}
-          disabled={isUploading}
+          disabled={isUploading || disabled}
         >
           <Ellipsis />
         </Button>

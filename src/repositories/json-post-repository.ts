@@ -9,6 +9,18 @@ const ROOT_DIR = process.cwd();
 const JSON_POSTS_FILE_PATH = resolve(ROOT_DIR, 'src', 'db', 'seed', 'posts.json');
 
 export class JsonPostRepository implements PostRepository {
+  create(post: PostModel): Promise<PostModel> {
+    throw new Error('Method not implemented.');
+  }
+  delete(id: string): Promise<PostModel> {
+    throw new Error('Method not implemented.');
+  }
+  update(
+    id: string,
+    newPostData: Omit<PostModel, 'id' | 'slug' | 'createdAt' | 'updatedAt'>,
+  ): Promise<PostModel> {
+    throw new Error('Method not implemented.');
+  }
   private async simulateDelay() {
     if (WAIT_TIME_MS <= 0) return;
     await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_MS));
