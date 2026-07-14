@@ -5,11 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { makePartialPublicPost, PublicPost } from '@/models/PostModel';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import { ImageUploadField } from '../ImageUploadField';
 import { MarkdownEditor } from '../MarkdownEditor';
 import { Checkbox } from '../ui/checkbox';
 import { Label } from '../ui/label';
+import { toast } from 'react-toastify';
 
 type ManagePostFormProps = {
   publicPost?: PublicPost;
@@ -26,7 +27,16 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
     setPrevState(state);
     setForm(state.formState);
     setContentValue(state.formState.content);
+    console.log(state);
   }
+
+  useEffect(() => {
+    if (state.errors.length > 0) {
+      toast.dismiss();
+      state.errors.forEach((e) => toast.error(e));
+    }
+  }, [state.errors]);
+
   return (
     <form action={action} className="w-full mb-16">
       <FieldGroup>
@@ -56,6 +66,7 @@ export function ManagePostForm({ publicPost }: ManagePostFormProps) {
         <Field orientation="horizontal">
           <Input
             id="author"
+            name="author"
             type="text"
             placeholder="João Augusto"
             value={form.author}
