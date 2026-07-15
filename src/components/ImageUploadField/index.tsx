@@ -52,8 +52,6 @@ export function ImageUploadField({ disabled = false }: ImageUploadFieldProps) {
       setImgUrl(result.url);
       toast.success(`Imagem enviada com sucesso ${result.url}`);
     });
-
-    console.log(formData.get('file'));
   }
   return (
     <Field>

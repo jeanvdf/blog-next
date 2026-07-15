@@ -61,7 +61,6 @@ export function ManagePostForm(props: ManagePostFormProps) {
     setPrevState(state);
     setForm(state.formState);
     setContentValue(state.formState.content);
-    console.log(state);
   }
 
   return (

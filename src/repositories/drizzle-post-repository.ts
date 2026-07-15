@@ -1,14 +1,12 @@
 import { drizzleDb } from '@/db/drizzle';
-import { PostModel } from '@/models/PostModel';
-import { PostRepository } from './post-repository';
 import { postsTable } from '@/db/drizzle/schemas';
-import { updateTag } from 'next/cache';
+import { PostModel } from '@/models/PostModel';
 import { eq } from 'drizzle-orm';
-import { except } from 'drizzle-orm/gel-core';
+import { updateTag } from 'next/cache';
+import { PostRepository } from './post-repository';
 
 export class DrizzlePostRepository implements PostRepository {
   async findAll(): Promise<PostModel[]> {
-    console.log('FindAll');
     const allPosts = await drizzleDb.query.posts.findMany({
       orderBy: (posts, { desc }) => desc(posts.createdAt),
     });
@@ -16,7 +14,6 @@ export class DrizzlePostRepository implements PostRepository {
   }
 
   async findAllPublished(): Promise<PostModel[]> {
-    console.log('findAllPublished');
     const posts = await drizzleDb.query.posts.findMany({
       orderBy: (posts, { desc }) => desc(posts.createdAt),
       where: (posts, { eq }) => eq(posts.published, true),
@@ -36,7 +33,6 @@ export class DrizzlePostRepository implements PostRepository {
   }
 
   async findBySlugPublished(slug: string): Promise<PostModel> {
-    console.log('findBySlugPublished');
     const post = await drizzleDb.query.posts.findFirst({
       where: (posts, { eq, and }) => and(eq(posts.slug, slug), eq(posts.published, true)),
     });
