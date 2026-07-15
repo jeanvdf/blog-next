@@ -38,12 +38,8 @@ export async function loginAction(state: StateLoginActionProps, formData: FormDa
     };
   }
 
-  console.log('username', username);
-  console.log('password', password);
-
   // Aqui eu checaria se o usuário existe na base de dados
   const isUsernameValid = username === process.env.LOGIN_USER;
-  console.log('isUsernameValid', process.env.LOGIN_USER);
   const isPasswordValid = await verifyPassword(password, process.env.LOGIN_PASSWORD || '');
 
   if (!isUsernameValid || !isPasswordValid) {

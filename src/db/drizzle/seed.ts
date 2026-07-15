@@ -1,10 +1,10 @@
-import { drizzlePostRepository } from '@/repositories';
+import { jsonPostRepository } from '@/repositories';
 import { eq } from 'drizzle-orm';
 import { drizzleDb } from '.';
 import { postsTable } from './schemas';
 
 (async () => {
-  const posts = await drizzlePostRepository.findAll();
+  const posts = await jsonPostRepository.findAll();
   console.log(posts);
   try {
     await drizzleDb.insert(postsTable).values(posts);
@@ -14,7 +14,7 @@ import { postsTable } from './schemas';
 })();
 
 (async () => {
-  const posts = await drizzlePostRepository.findAll();
+  const posts = await jsonPostRepository.findAll();
   console.log(posts);
   try {
     await drizzleDb
