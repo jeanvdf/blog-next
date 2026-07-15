@@ -8,11 +8,14 @@ import { makeSlugFromText } from '@/utils/make-slug-from-text';
 import { redirect } from 'next/navigation';
 import { v4 as uuidV4 } from 'uuid';
 import { PostActionState } from './types';
+import { verifyLoginSession } from '@/lib/login/manage-login';
 
 export async function createPostAction(
   prevState: PostActionState,
   formData: FormData,
 ): Promise<PostActionState> {
+  const isAuthenticated = await verifyLoginSession();
+
   if (!(formData instanceof FormData)) {
     return {
       formState: {
@@ -24,6 +27,13 @@ export async function createPostAction(
 
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = PostCreateSchema.safeParse(formDataToObj);
+
+  if (!isAuthenticated) {
+    return {
+      errors: ['Faça login novamente antes de salvar.'],
+      formState: makePartialPublicPost(formDataToObj),
+    };
+  }
 
   if (!zodParsedObj.success) {
     const errors = getZodErrorMessages(zodParsedObj.error);

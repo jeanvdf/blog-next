@@ -6,11 +6,22 @@ import { drizzlePostRepository } from '@/repositories';
 import { getZodErrorMessages } from '@/utils/get-zod-error-message';
 import { updateTag } from 'next/cache';
 import { PostActionState } from './types';
+import { verifyLoginSession } from '@/lib/login/manage-login';
 
 export async function updatePostAction(
   prevState: PostActionState,
   formData: FormData,
 ): Promise<PostActionState> {
+  const isAuthenticated = await verifyLoginSession();
+  if (!isAuthenticated) {
+    return {
+      formState: {
+        ...prevState.formState,
+      },
+      errors: ['Faça login novamente.'],
+    };
+  }
+
   if (!(formData instanceof FormData)) {
     return {
       formState: {
