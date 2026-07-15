@@ -1,10 +1,11 @@
+'use client';
+
 import { Ellipsis } from 'lucide-react';
 import { Button } from '../ui/button';
 import { ButtonGroup } from '../ui/button-group';
 import { Field, FieldDescription, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
 import { useRef, useState, useTransition } from 'react';
-import { FILE_UPLOADER_MAX_SIZE } from '@/utils/constantes';
 import { toast } from 'react-toastify';
 import { uploadImageAction } from '@/actions/upload/upload-image-action';
 
@@ -30,8 +31,10 @@ export function ImageUploadField({ disabled = false }: ImageUploadFieldProps) {
       return;
     }
 
-    if (file.size > FILE_UPLOADER_MAX_SIZE) {
-      const fileSizeCalculated = FILE_UPLOADER_MAX_SIZE / 1024;
+    const maxSizeUploadImage = Number(process.env.NEXT_PUBLIC_FILE_UPLOADER_MAX_SIZE) || 900 * 1024;
+
+    if (file.size > maxSizeUploadImage) {
+      const fileSizeCalculated = maxSizeUploadImage / 1024;
       toast.error(`Selecione um arquivo de até ${fileSizeCalculated} KB.`);
       setImgUrl('');
       return;

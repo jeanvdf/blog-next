@@ -3,10 +3,11 @@ import { resolve } from 'path';
 
 import { PostModel } from '@/models/PostModel';
 import { PostRepository } from './post-repository';
-import { WAIT_TIME_MS } from '@/utils/constantes';
 
 const ROOT_DIR = process.cwd();
 const JSON_POSTS_FILE_PATH = resolve(ROOT_DIR, 'src', 'db', 'seed', 'posts.json');
+
+const simulateWaitms = Number(process.env.WAIT_TIME_MS) | 0;
 
 export class JsonPostRepository implements PostRepository {
   create(post: PostModel): Promise<PostModel> {
@@ -22,8 +23,8 @@ export class JsonPostRepository implements PostRepository {
     throw new Error('Method not implemented.');
   }
   private async simulateDelay() {
-    if (WAIT_TIME_MS <= 0) return;
-    await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_MS));
+    if (simulateWaitms <= 0) return;
+    await new Promise((resolve) => setTimeout(resolve, simulateWaitms));
   }
 
   private async readFromDisk(): Promise<PostModel[]> {
