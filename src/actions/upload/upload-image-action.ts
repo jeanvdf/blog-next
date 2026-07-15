@@ -51,7 +51,9 @@ export async function uploadImageAction(formData: FormData): Promise<UploadImage
     });
 
     return makeResult({ url: blob.url });
-  } catch {
-    return makeResult({ error: 'Falha ao enviar a imagem.' });
+  } catch (error) {
+    // DEBUG temporário: expõe a causa real da falha de upload em produção.
+    const detail = error instanceof Error ? error.message : String(error);
+    return makeResult({ error: `Falha ao enviar a imagem: ${detail}` });
   }
 }
