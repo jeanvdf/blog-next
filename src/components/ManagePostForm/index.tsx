@@ -144,7 +144,10 @@ export function ManagePostForm(props: ManagePostFormProps) {
           />
         </Field>
         <Field>
-          <ImageUploadField disabled={isPending} />
+          <ImageUploadField
+            disabled={isPending}
+            onUpload={(url) => setForm((p) => ({ ...p, coverImageUrl: url }))}
+          />
         </Field>
         <Field>
           <FieldLabel htmlFor="coverImageUrl">URL da imagem de capa</FieldLabel>

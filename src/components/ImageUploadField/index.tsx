@@ -11,9 +11,10 @@ import { uploadImageAction } from '@/actions/upload/upload-image-action';
 
 type ImageUploadFieldProps = {
   disabled?: boolean;
+  onUpload?: (url: string) => void;
 };
 
-export function ImageUploadField({ disabled = false }: ImageUploadFieldProps) {
+export function ImageUploadField({ disabled = false, onUpload }: ImageUploadFieldProps) {
   const inputRefImg = useRef<HTMLInputElement>(null);
   const [isUploading, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState('');
@@ -53,6 +54,7 @@ export function ImageUploadField({ disabled = false }: ImageUploadFieldProps) {
       }
 
       setImgUrl(result.url);
+      onUpload?.(result.url);
       toast.success(`Imagem enviada com sucesso ${result.url}`);
     });
   }

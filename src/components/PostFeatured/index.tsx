@@ -25,18 +25,18 @@ export async function PostFeatured() {
           className: 'rounded-xl',
         }}
         imageProps={{
-          src: '/images/tech01.png',
+          src: post.coverImageUrl,
           width: 1536,
           height: 1024,
-          alt: 'Título',
+          alt: post.title,
         }}
       />
 
       <PostSummary
         postHeading="h1"
-        createdAt="2023-10-10T10:00:00Z"
-        title="Teste primeiro post"
-        excerpt="Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestiae corporis ea dignissimos reiciendis dolores? Veniam laudantium explicabo praesentium iste similique commodi, nisi ex odio voluptatem eveniet totam sunt quo enim!"
+        createdAt={post.createdAt}
+        title={post.title}
+        excerpt={post.excerpt}
         postLink={postLink}
       />
     </section>
