@@ -1,8 +1,8 @@
 'use server';
 
 import { verifyLoginSession } from '@/lib/login/manage-login';
-import { mkdir, writeFile } from 'fs/promises';
-import { extname, resolve } from 'path';
+import { put } from '@vercel/blob';
+import { extname } from 'path';
 
 type UploadImageActionResult = {
   url: string;
@@ -43,19 +43,15 @@ export async function uploadImageAction(formData: FormData): Promise<UploadImage
   const imageExtension = extname(file.name);
   const uniqueImageName = `${Date.now()}${imageExtension}`;
 
-  const diretorioImage = process.env.IMAGE_UPLOAD_DIR || 'uploads';
-  const uploadFullPath = resolve(process.cwd(), 'public', diretorioImage);
-  await mkdir(uploadFullPath, { recursive: true });
+  try {
+    // Envia para o Vercel Blob (storage de objetos). Usa BLOB_READ_WRITE_TOKEN das env vars.
+    const blob = await put(uniqueImageName, file, {
+      access: 'public',
+      addRandomSuffix: true,
+    });
 
-  const fileArrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(fileArrayBuffer);
-
-  const fileFullPath = resolve(uploadFullPath, uniqueImageName);
-
-  await writeFile(fileFullPath, buffer);
-
-  const imgServerUrl = process.env.IMAGE_SERVER_URL || 'http://localhost:3000/uploads';
-  const url = `${imgServerUrl}/${uniqueImageName}`;
-
-  return makeResult({ url });
+    return makeResult({ url: blob.url });
+  } catch {
+    return makeResult({ error: 'Falha ao enviar a imagem.' });
+  }
 }
