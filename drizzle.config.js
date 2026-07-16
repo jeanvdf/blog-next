@@ -3,7 +3,7 @@ import { defineConfig } from 'drizzle-kit';
 // Carrega TURSO_DATABASE_URL / TURSO_AUTH_TOKEN do .env para os comandos de CLI.
 if (typeof process.loadEnvFile === 'function') {
   try {
-    process.loadEnvFile('.env');
+    process.loadEnvFile('.env.local');
   } catch {}
 }
 

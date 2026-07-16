@@ -12,7 +12,7 @@
     "prepare": "husky",
     "migrate": "drizzle-kit migrate",
     "generate": "drizzle-kit generate",
-    "seed": "tsx --env-file=.env src/db/drizzle/seed.ts"
+    "seed": "tsx --env-file=.env.local src/db/drizzle/seed.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
