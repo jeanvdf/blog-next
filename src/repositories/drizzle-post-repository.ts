@@ -49,7 +49,7 @@ export class DrizzlePostRepository implements PostRepository {
       columns: { id: true },
     });
 
-    if (!!duplicateValidation) {
+    if (duplicateValidation) {
       throw new Error(`Este post já existe.`);
     }
 

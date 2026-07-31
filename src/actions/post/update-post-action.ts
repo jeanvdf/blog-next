@@ -1,12 +1,12 @@
 'use server';
 
+import { verifyLoginSession } from '@/lib/login/manage-login';
 import { PostUpdateSchema } from '@/lib/post/validation';
 import { makePartialPublicPost, makePublicPost } from '@/models/PostModel';
 import { drizzlePostRepository } from '@/repositories';
 import { getZodErrorMessages } from '@/utils/get-zod-error-message';
 import { updateTag } from 'next/cache';
 import { PostActionState } from './types';
-import { verifyLoginSession } from '@/lib/login/manage-login';
 
 export async function updatePostAction(
   prevState: PostActionState,
@@ -31,17 +31,6 @@ export async function updatePostAction(
     };
   }
 
-  const id = formData.get('id')?.toString();
-
-  if (!id || typeof id !== 'string') {
-    return {
-      formState: {
-        ...prevState.formState,
-      },
-      errors: ['ID inválido.'],
-    };
-  }
-
   const formDataToObj = Object.fromEntries(formData.entries());
   const zodParsedObj = PostUpdateSchema.safeParse(formDataToObj);
 
@@ -54,10 +43,7 @@ export async function updatePostAction(
     };
   }
 
-  const finalObj = zodParsedObj.data;
-  const newPost = {
-    ...finalObj,
-  };
+  const { id, ...newPost } = zodParsedObj.data;
 
   let post;
   try {

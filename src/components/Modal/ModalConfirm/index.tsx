@@ -42,6 +42,8 @@ export function ModalConfirm({ title, content, onConfirm, children }: ModalConfi
           <AlertDialogDescription>{content}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
+          {/* Foco inicial no Cancelar é proposital: evita confirmar exclusão sem querer. */}
+          {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
           <AlertDialogCancel autoFocus variant="outline" disabled={isPending}>
             Cancelar
           </AlertDialogCancel>

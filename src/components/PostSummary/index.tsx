@@ -10,7 +10,7 @@ type PostSummaryProps = {
 };
 
 export function PostSummary({
-  postHeading = 'h2',
+  postHeading,
   createdAt,
   title,
   excerpt,

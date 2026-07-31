@@ -1,6 +1,7 @@
 'use server';
 
 import { createLoginSession, verifyPassword } from '@/lib/login/manage-login';
+import { LoginSchema } from '@/lib/login/validation';
 import { asyncDelay } from '@/utils/async-delay';
 import { redirect } from 'next/navigation';
 
@@ -26,17 +27,16 @@ export async function loginAction(state: StateLoginActionProps, formData: FormDa
       error: 'Dados inválidos',
     };
   }
+  const parsed = LoginSchema.safeParse(Object.fromEntries(formData.entries()));
 
-  // Dados que o usuário digitou no form
-  const username = formData.get('username')?.toString() || '';
-  const password = formData.get('password')?.toString() || '';
-
-  if (!username || !password) {
+  if (!parsed.success) {
     return {
       username: '',
       error: 'Digite o usuário e a senha.',
     };
   }
+
+  const { username, password } = parsed.data;
 
   // Aqui eu checaria se o usuário existe na base de dados
   const isUsernameValid = username === process.env.LOGIN_USER;

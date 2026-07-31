@@ -11,16 +11,16 @@ const simulateWaitms = Number(process.env.WAIT_TIME_MS) | 0;
 
 export class JsonPostRepository implements PostRepository {
   create(post: PostModel): Promise<PostModel> {
-    throw new Error('Method not implemented.');
+    throw new Error(`Method not implemented. ${post.id}`);
   }
   delete(id: string): Promise<PostModel> {
-    throw new Error('Method not implemented.');
+    throw new Error(`Method not implemented. ${id}`);
   }
   update(
     id: string,
-    newPostData: Omit<PostModel, 'id' | 'slug' | 'createdAt' | 'updatedAt'>,
+    // newPostData: Omit<PostModel, 'id' | 'slug' | 'createdAt' | 'updatedAt'>,
   ): Promise<PostModel> {
-    throw new Error('Method not implemented.');
+    throw new Error(`Method not implemented. ${id}`);
   }
   private async simulateDelay() {
     if (simulateWaitms <= 0) return;
